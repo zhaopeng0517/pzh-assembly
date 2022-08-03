@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import p.zh.assembly.middleware.common.em.realize.AuthTypeEnum;
 
 /**
  * <p>
@@ -44,7 +45,7 @@ public class MiddlewareAuthPower implements Serializable {
     /**
      * 权限类型
      */
-    private Integer authType;
+    private AuthTypeEnum authType;
 
     /**
      * 接入系统编码
