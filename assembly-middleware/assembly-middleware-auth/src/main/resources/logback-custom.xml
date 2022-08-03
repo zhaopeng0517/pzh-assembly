@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <springProperty scope="context" name="LOG_HOME" source="log.path"/>
+    <springProperty scope="context" name="LOG_NAME" source="log.name"/>
+    <springProperty scope="context" name="LOG-LEVEL" source="log.level"/>
+    <springProperty scope="context" name="LOG_MAX_SIZE" source="log.file.max-size"/>
+    <springProperty scope="context" name="LOG_TOTAL_SIZE_CAP" source="log.file.total-size-cap"/>
+    <springProperty scope="context" name="LOG_MAX_HISTORY" source="log.file.max-history"/>
+
+    <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%logger{10}]-[%L]-[%p]  %m%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%blue(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%cyan(%t)] [%yellow(%logger{10})]-[%L]-[%highlight(%p)] %m%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME:-logs}/${LOG_NAME:-main}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME:-logs}/${LOG_NAME:-main}-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY:-180}</maxHistory>
+            <maxFileSize>${LOG_MAX_SIZE:-100MB}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP:-10GB}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME:-logs}/${LOG_NAME:-main}-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME:-logs}/${LOG_NAME:-main}-error-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY:-180}</maxHistory>
+            <maxFileSize>${LOG_MAX_SIZE:-100MB}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP:-10GB}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <root level="${LOG-LEVEL:-info}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE_ERROR"/>
+    </root>
+    <springProfile name="dev">
+        <logger name="p.zh" level="DEBUG" additivity="false">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger level="INFO" name="com.alibaba.nacos"/>
+        <logger level="DEBUG" name="com.ibatis"/>
+        <logger level="INFO" name="tk.mybatis"/>
+        <logger level="INFO" name="java.sql"/>
+        <logger level="INFO" name="ch.qos.logback"/>
+        <logger level="INFO" name="org"/>
+        <logger level="DEBUG" name="org.springframework.transaction.interceptor"/>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="${LOG-LEVEL:-info}">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </root>
+        <logger level="WARN" name="com.alibaba.nacos">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="${LOG-LEVEL:-info}">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </root>
+        <logger level="WARN" name="com.alibaba.nacos">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </logger>
+    </springProfile>
+</configuration>
