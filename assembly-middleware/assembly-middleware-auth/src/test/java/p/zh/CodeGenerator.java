@@ -77,7 +77,7 @@ public class CodeGenerator {
             strategy.setEntityLombokModel(true);
             strategy.setRestControllerStyle(true);
             strategy.setEntityColumnConstant(true);
-            strategy.setInclude("middleware_auth_power");
+            strategy.setInclude("middleware_auth_power_role_relation");
             strategy.setControllerMappingHyphenStyle(true);
             strategy.setTablePrefix(pc.getModuleName() + "_");
             mpg.setStrategy(strategy);
