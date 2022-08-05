@@ -37,11 +37,11 @@ public class CodeGenerator {
             mpg.setGlobalConfig(gc);
 
             DataSourceConfig dsc = new DataSourceConfig();
-            dsc.setUrl("jdbc:mysql://139.159.212.121:13306/assembly-middleware?useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+            dsc.setUrl("jdbc:mysql://127.0.0.1:3306/assembly-middleware?useUnicode=true&useSSL=false&characterEncoding=UTF-8");
             // dsc.setSchemaName("public");
             dsc.setDriverName("com.mysql.cj.jdbc.Driver");
             dsc.setUsername("root");
-            dsc.setPassword("uat0080796#Tb9AK2");
+            dsc.setPassword("xiongls");
             mpg.setDataSource(dsc);
 
             PackageConfig pc = new PackageConfig();
@@ -77,7 +77,7 @@ public class CodeGenerator {
             strategy.setEntityLombokModel(true);
             strategy.setRestControllerStyle(true);
             strategy.setEntityColumnConstant(true);
-            strategy.setInclude("middleware_auth_power_role_relation");
+            strategy.setInclude("middleware_auth_system_code");
             strategy.setControllerMappingHyphenStyle(true);
             strategy.setTablePrefix(pc.getModuleName() + "_");
             mpg.setStrategy(strategy);
